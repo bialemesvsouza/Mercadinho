@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadinho</title>
+    <link rel="stylesheet" href="styleLogin.css">
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+</head>
+<body >
+    <div class="principal">
+        
+       <div id="imagem"> <img src="imagens/logo 3-Photoroom.png" alt=""> </div>
+        <h2>Login:</h2> 
+        <input type="text" id="entrada"> 
+        <h2>Senha:</h2> 
+        <input type="password" id="senha"><br>
+    <div class="botao">
+        <button onclick="vai()">ENTRAR</button>
+    </div>
+    </div>
+
+    <script>
+        function vai() {
+            var ent = document.getElementById('entrada').value;
+            var sen = document.getElementById('senha').value;
+            if (ent === 'Beatriz' && sen === '123'){
+                window.location.href = 'indexAdm.html '
+            }else{
+                alert('Usuário não existe!');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadinho</title>
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="stylePag.css">
+</head>
+
+<body>
+    <div id="titulo">
+        <img src="imagens/logo 3-Photoroom.png" alt="">
+        <h1>Obrigada por compra conosco!</h1>
+    </div>
+<div class="tudo">
+    <div id="entrega">
+        <h3>Por favor insira as informações para entrega:</h3> 
+        <p>Nome:</p>
+        <input type="text" >
+        <p>CPF:</p>
+        <input type="number" >
+        <p>Telefone: </p>
+        <input type="number" >
+        <p>Rua: </p>
+        <input type="text">
+        <p>Bairro: </p>
+        <input type="text">
+        <p>Número: </p>
+        <input type="number">
+        <p>Complemento: </p>
+        <input type="text">
+    </div>
+    <div id="Pagamento">
+        <h3>Por favor insira a forma de pagamento:</h3>
+        <select id="opcoes">
+            <option>Selecionar</option>
+            <option>Cartão de Crédito</option>
+            <option>Cartão de Débito</option>
+            <option>Pix</option>
+        </select>
+       
+       <div class="botoes">
+        <button onclick="compra()">Comprar</button>
+        <a href="indexInicial.html"> <button>Cancelar</button> </a>
+    </div>
+    </div>
+    
+
+    <div id="diplayRight">
+        <h1 class="carrinho">
+            Itens Selecionados
+        </h1>
+        <div id="itensCarrinho"></div>
+        <div id="final"> 
+            <div id="totalCarrinho">Total: R$ 0,00</div>
+        </div>
+    </div>
+</div>
+    <script>
+        function removerItem(idProduto) {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            carrinho = carrinho.filter(item => item.id !== idProduto);
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            let containerCarrinho = document.getElementById('itensCarrinho');
+            containerCarrinho.innerHTML = '';
+
+            let total = 0;
+            carrinho.forEach(item => {
+                total += parseFloat(item.preco);
+                let divItem = document.createElement('div');
+                divItem.innerHTML = `
+                    <p>${item.nome} - R$ ${item.preco}</p>
+                    <button onclick="removerItem('${item.id}')">Remover</button>`;
+                containerCarrinho.appendChild(divItem);
+            });
+            let totalCarrinho = document.getElementById('totalCarrinho');
+            totalCarrinho.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarCarrinho();
+            atualizarProdutos();
+        });
+
+        function compra(){
+            alert('Compra realizada com sucesso!');
+        }
+    </script>
+</body>
+
+</html>

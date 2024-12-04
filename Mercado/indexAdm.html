@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadinho</title>
+    <link rel="stylesheet" href="styleAdm.css">
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="top">
+        <img src="imagens/logo 3-Photoroom.png" id="logo">
+    </div>
+
+    <div class="meio">
+        
+        <div id="new">
+            <h3 class="titulo">Adicionar um novo item</h3>
+            <p>Imagem do Produto: </p>
+            <input type="file" id="produto">
+            <p>Classificação do Produto: </p>
+            <select id="classProduto">
+                <option value="">Selecione</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Frutas e Vegetais">Frutas e Vegetais</option>
+            </select>
+            <p>Descrição do Produto: </p>
+            <input type="text" id="nomeProduto">
+            <p>Valor do Produto: </p>
+            <input type="number" id="valorProduto">
+
+           <div id="bott2"> <button onclick="adicionarProduto()" id="bott">Adicionar</button> </div>
+        </div>
+
+        <div id="old">
+            <h3 class="titulo">Itens já existentes </h3>
+            <div id="containerProdutosBebidas"></div>
+            <div id="containerProdutosFrutas"></div>
+            <div id="containerProdutosSemClasse"></div>
+        </div>
+        <div class="botao">
+            <a href="indexInicial.html"><button class="estiloBotao">Retornar a Tela de Cliente</button></a>
+        </div>
+    </div>
+
+    <script>
+        function adicionarProduto() {
+            const imagemProdutoInput = document.getElementById('produto');
+            const imagemProduto = imagemProdutoInput.files[0] ? URL.createObjectURL(imagemProdutoInput.files[0]) : '';
+            const nomePro = document.getElementById('nomeProduto').value;
+            const valorPro = document.getElementById('valorProduto').value;
+            const classificacao = document.getElementById('classProduto').value;
+
+            let produtosTodos = JSON.parse(localStorage.getItem('produtosTodos')) || [];
+            let item = {
+                id: Date.now().toString(),
+                imagem: imagemProduto,
+                nome: nomePro,
+                valor: valorPro,
+                classe: classificacao
+            };
+            produtosTodos.push(item);
+            localStorage.setItem('produtosTodos', JSON.stringify(produtosTodos));
+            console.log('Produto adicionado:', item);
+            atualizarProdutos();
+
+            
+            atualizarTelaInicial();
+        }
+
+        function removerProduto(idProduto) {
+            let produtosTodos = JSON.parse(localStorage.getItem('produtosTodos')) || [];
+            produtosTodos = produtosTodos.filter(item => item.id !== idProduto);
+            localStorage.setItem('produtosTodos', JSON.stringify(produtosTodos));
+            console.log('Produto removido:', idProduto);
+            atualizarProdutos();
+
+            
+            atualizarTelaInicial();
+        }
+
+        function atualizarProdutos() {
+            let produtosTodos = JSON.parse(localStorage.getItem('produtosTodos')) || [];
+
+            let containerBebidas = document.getElementById('containerProdutosBebidas');
+            let containerFrutas = document.getElementById('containerProdutosFrutas');
+            let containerSemClasse = document.getElementById('containerProdutosSemClasse');
+
+            containerBebidas.innerHTML = '<h3>Bebidas: </h3>';
+            containerFrutas.innerHTML = '<h3>Frutas e Vegetais: </h3>';
+            containerSemClasse.innerHTML = '<h3>Outros: </h3>';
+
+            produtosTodos.forEach(item => {
+                let divItem = document.createElement('div');
+                divItem.innerHTML = `
+                    <img src="${item.imagem}" alt="${item.nome}" width="100">
+                    <p>Nome: ${item.nome}</p>
+                    <p>Valor: ${item.valor}</p>
+                    <button onclick="removerProduto('${item.id}')" class = 'geral'>Remover</button>
+                `;
+
+                if (item.classe === 'Bebidas') {
+                    containerBebidas.appendChild(divItem);
+                } else if (item.classe === 'Frutas e Vegetais') {
+                    containerFrutas.appendChild(divItem);
+                } else {
+                    containerSemClasse.appendChild(divItem);
+                }
+            });
+        }
+
+        function atualizarTelaInicial() {
+            let produtosTodos = JSON.parse(localStorage.getItem('produtosTodos')) || [];
+            localStorage.setItem('produtosIniciais', JSON.stringify(produtosTodos));
+        }
+
+        document.addEventListener('DOMContentLoaded', atualizarProdutos);
+    </script>
+</body>
+
+</html>
